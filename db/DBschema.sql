@@ -4,6 +4,24 @@
 -- Based on SRS v2.0, Use Cases, TechStack
 -- ============================================================
 
+IF DB_ID(N'KeyMapperDb') IS NULL
+BEGIN
+    CREATE DATABASE KeyMapperDb;
+END;
+GO
+
+USE KeyMapperDb;
+GO
+
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+SET ANSI_PADDING ON;
+SET ANSI_WARNINGS ON;
+SET ARITHABORT ON;
+SET CONCAT_NULL_YIELDS_NULL ON;
+SET NUMERIC_ROUNDABORT OFF;
+GO
+
 -- ============================================================
 -- 1. TABLES
 -- ============================================================
@@ -338,7 +356,7 @@ END;
 GO
 
 -- 5.2 Soft delete user account (GDPR - FR-14.4)
-USE KeyLoggerDB;
+USE KeyMapperDb;
 GO
 CREATE OR ALTER PROCEDURE dbo.sp_RequestAccountDeletion
     @UserId INT,

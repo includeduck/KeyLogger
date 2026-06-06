@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ACD14DEC-2879-45CF-ADEB-0FA4F4558C41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyMapper.Api", "src\KeyMapper.Api\KeyMapper.Api.csproj", "{82A5CF4A-9D73-446C-9F8A-2DCF9DE69307}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyMapper.Desktop", "src\KeyMapper.Desktop\KeyMapper.Desktop.csproj", "{B45EE388-45F9-48E6-9E4C-BE64B0C4ACFB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82A5CF4A-9D73-446C-9F8A-2DCF9DE69307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82A5CF4A-9D73-446C-9F8A-2DCF9DE69307}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82A5CF4A-9D73-446C-9F8A-2DCF9DE69307}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82A5CF4A-9D73-446C-9F8A-2DCF9DE69307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B45EE388-45F9-48E6-9E4C-BE64B0C4ACFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B45EE388-45F9-48E6-9E4C-BE64B0C4ACFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B45EE388-45F9-48E6-9E4C-BE64B0C4ACFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B45EE388-45F9-48E6-9E4C-BE64B0C4ACFB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{82A5CF4A-9D73-446C-9F8A-2DCF9DE69307} = {ACD14DEC-2879-45CF-ADEB-0FA4F4558C41}
+		{B45EE388-45F9-48E6-9E4C-BE64B0C4ACFB} = {ACD14DEC-2879-45CF-ADEB-0FA4F4558C41}
+	EndGlobalSection
+EndGlobal
