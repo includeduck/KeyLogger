@@ -8,10 +8,6 @@
 -- 1. TABLES
 -- ============================================================
 
-CREATE DATABASE KeyLoggerDB;
-USE KeyLoggerDB;
-GO
-
 -- 1.1 Users (authentication, profile, account status)
 CREATE TABLE dbo.Users (
     UserId INT IDENTITY(1,1) PRIMARY KEY,
@@ -186,6 +182,7 @@ CREATE INDEX IX_SyncLogs_DeviceId ON dbo.SyncLogs(DeviceId, StartedAt);
 CREATE INDEX IX_AuditLogs_UserId ON dbo.AuditLogs(UserId);
 CREATE INDEX IX_AuditLogs_Action ON dbo.AuditLogs(Action);
 CREATE INDEX IX_AuditLogs_CreatedAt ON dbo.AuditLogs(CreatedAt);
+GO
 -- ============================================================
 -- 3. TRIGGERS
 -- ============================================================
@@ -202,6 +199,7 @@ BEGIN
     FROM dbo.Users u
     INNER JOIN inserted i ON u.UserId = i.UserId;
 END;
+GO
 
 -- 3.2 Trigger to log admin actions when a user is suspended/reactivated
 CREATE TRIGGER trg_Users_AuditSuspension
@@ -227,6 +225,7 @@ BEGIN
     INNER JOIN deleted d ON i.UserId = d.UserId
     WHERE (i.IsSuspended != d.IsSuspended) AND i.IsSuspended IS NOT NULL;
 END;
+GO
 
 -- 3.3 Trigger to prevent negative press counts in KeyCountsDaily (data integrity)
 CREATE TRIGGER trg_KeyCountsDaily_CheckNonNegative
@@ -241,6 +240,7 @@ BEGIN
         ROLLBACK TRANSACTION;
     END
 END;
+GO
 
 -- ============================================================
 -- 4. VIEWS (common aggregations for dashboard)
@@ -254,6 +254,7 @@ SELECT
     SUM(PressCount) AS TotalKeyPressesLifetime
 FROM dbo.KeyCountsDaily
 GROUP BY UserId;
+GO
 
 -- 4.2 Daily summary for a user (for trend lines)
 CREATE VIEW dbo.vw_UserDailySummary
@@ -264,6 +265,7 @@ SELECT
     SUM(PressCount) AS DailyTotal
 FROM dbo.KeyCountsDaily
 GROUP BY UserId, EventDate;
+GO
 
 -- 4.3 Top 10 most used keys for a user (overall)
 CREATE VIEW dbo.vw_UserTopKeys
@@ -275,6 +277,7 @@ SELECT
     SUM(PressCount) AS TotalPresses
 FROM dbo.KeyCountsDaily
 GROUP BY UserId, KeyCode, KeyDisplayName
+GO
 -- (Usage: SELECT * FROM vw_UserTopKeys WHERE UserId = @uid ORDER BY TotalPresses DESC OFFSET 0 ROWS FETCH NEXT 10 ROWS ONLY)
 
 -- 4.4 Device stats with last sync and total keys
@@ -292,6 +295,7 @@ SELECT
 FROM dbo.Devices d
 LEFT JOIN dbo.KeyCountsDaily kcd ON d.DeviceId = kcd.DeviceId
 GROUP BY d.DeviceId, d.UserId, d.DeviceName, d.OperatingSystem, d.ClientVersion, d.LastSyncAt, d.IsPrimary;
+GO
 
 -- 4.5 Hourly activity heatmap data (for a given user + date range)
 CREATE VIEW dbo.vw_HourlyActivity
@@ -334,6 +338,8 @@ END;
 GO
 
 -- 5.2 Soft delete user account (GDPR - FR-14.4)
+USE KeyLoggerDB;
+GO
 CREATE OR ALTER PROCEDURE dbo.sp_RequestAccountDeletion
     @UserId INT,
     @PasswordHash NVARCHAR(255)   -- should be verified by application layer
