@@ -1,6 +1,11 @@
 using System.Text;
+using KeyMapper.Api.Configuration;
+using KeyMapper.Api.Data;
+using KeyMapper.Api.Endpoints;
+using KeyMapper.Api.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +15,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.Configure<AppOptions>(builder.Configuration.GetSection(AppOptions.SectionName));
+
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()
     ?? throw new InvalidOperationException("JWT configuration is missing.");
 
@@ -45,6 +52,15 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
+builder.Services.AddDbContext<KeyMapperDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("KeyMapperDb")));
+
+builder.Services.AddScoped<PasswordService>();
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<AuditService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddSingleton<IEmailSender, ConsoleEmailSender>();
 
 var app = builder.Build();
 
@@ -84,18 +100,10 @@ app.MapGet("/api/auth/ping", [Authorize] () => Results.Ok(new
     .WithName("AuthenticatedPing")
     .WithOpenApi();
 
+app.MapAuthEndpoints();
+app.MapProfileEndpoints();
+
 app.Run();
-
-internal sealed record JwtOptions
-{
-    public const string SectionName = "Jwt";
-
-    public string Issuer { get; init; } = "KeyMapper.Api";
-
-    public string Audience { get; init; } = "KeyMapper.Clients";
-
-    public string SigningKey { get; init; } = "change-this-development-signing-key-before-production";
-}
 
 internal sealed record HealthResponse(
     string Service,

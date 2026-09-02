@@ -1,6 +1,70 @@
 @KeyMapper.Api_HostAddress = http://localhost:5147
 
-GET {{KeyMapper.Api_HostAddress}}/weatherforecast/
+### Health
+GET {{KeyMapper.Api_HostAddress}}/api/health
 Accept: application/json
 
-###
+### Register
+POST {{KeyMapper.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "demo_user",
+  "email": "demo@example.com",
+  "password": "Password1!",
+  "acceptTerms": true
+}
+
+### Verify email (replace token from API console log)
+GET {{KeyMapper.Api_HostAddress}}/api/auth/verify-email?token=REPLACE_TOKEN
+Accept: application/json
+
+### Login
+# @name login
+POST {{KeyMapper.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "usernameOrEmail": "demo@example.com",
+  "password": "Password1!"
+}
+
+### Profile
+GET {{KeyMapper.Api_HostAddress}}/api/profile
+Authorization: Bearer {{login.response.body.accessToken}}
+Accept: application/json
+
+### Forgot password
+POST {{KeyMapper.Api_HostAddress}}/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "demo@example.com"
+}
+
+### Change password
+PUT {{KeyMapper.Api_HostAddress}}/api/profile/password
+Authorization: Bearer {{login.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Password1!",
+  "newPassword": "Password2!"
+}
+
+### Refresh token
+POST {{KeyMapper.Api_HostAddress}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+### Logout
+POST {{KeyMapper.Api_HostAddress}}/api/auth/logout
+Authorization: Bearer {{login.response.body.accessToken}}
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
